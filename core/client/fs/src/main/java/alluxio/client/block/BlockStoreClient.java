@@ -41,6 +41,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import javassist.bytecode.analysis.ControlFlow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -147,6 +148,9 @@ public final class BlockStoreClient {
         options.getStatus(), options.getUfsReadLocationPolicy(), failedWorkers);
     WorkerNetAddress dataSource = dataSourceAndType.getFirst();
     BlockInStreamSource dataSourceType = dataSourceAndType.getSecond();
+
+    BlockStoreCacheMetricsRecorder.record(dataSourceType);
+
     try {
       return BlockInStream.create(mContext, info, dataSource, dataSourceType, options);
     } catch (UnavailableException e) {
@@ -218,6 +222,12 @@ public final class BlockStoreClient {
             : BlockInStreamSource.REMOTE;
       }
     }
+
+    if (false && dataSourceType != BlockInStreamSource.NODE_LOCAL) {
+      dataSource = null;
+      dataSourceType = null;
+    }
+
     // Can't get data from Alluxio, get it from the UFS instead
     if (dataSource == null) {
       dataSourceType = BlockInStreamSource.UFS;

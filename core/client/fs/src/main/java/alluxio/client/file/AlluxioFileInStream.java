@@ -14,6 +14,7 @@ package alluxio.client.file;
 import alluxio.AlluxioURI;
 import alluxio.annotation.PublicApi;
 import alluxio.client.ReadType;
+import alluxio.client.block.BlockStoreCacheMetricsRecorder;
 import alluxio.client.block.BlockStoreClient;
 import alluxio.client.block.stream.BlockInStream;
 import alluxio.client.block.stream.BlockWorkerClient;
@@ -130,6 +131,12 @@ public class AlluxioFileInStream extends FileInStream {
       // release the acquired resource, otherwise, FileSystemContext reinitialization will be
       // blocked forever.
       throw CommonUtils.closeAndRethrowRuntimeException(mCloser, t);
+    }
+
+    // If the Spark does not reset it, reset it here
+    // Let's this lb be used by vanilla spark
+    if (BlockStoreCacheMetricsRecorder.get() == null) {
+      BlockStoreCacheMetricsRecorder.reset();
     }
   }
 
