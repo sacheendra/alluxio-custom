@@ -3,7 +3,7 @@ package alluxio.client.block;
 import alluxio.client.block.stream.BlockInStream;
 
 public class BlockStoreCacheMetricsRecorder {
-    public static ThreadLocal<BlockStoreCacheMetrics> metrics;
+    public static ThreadLocal<BlockStoreCacheMetrics> metrics = new ThreadLocal<>();
 
     public static void reset() {
         metrics.set(new BlockStoreCacheMetrics());

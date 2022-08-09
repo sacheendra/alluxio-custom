@@ -6260,6 +6260,13 @@ public final class PropertyKey implements Comparable<PropertyKey> {
                   + "load option.")
           .setScope(Scope.CLIENT)
           .build();
+
+    public static final PropertyKey REMOTE_READ_FROM_UFS_ONLY =
+            booleanBuilder(Name.REMOTE_READ_FROM_UFS_ONLY)
+                    .setDefaultValue(true)
+                    .setDescription("Read data from UFS only if not available locally")
+                    .setScope(Scope.CLIENT)
+                    .build();
   /**
    * @deprecated This key is used for testing. It is always deprecated.
    */
@@ -7484,6 +7491,9 @@ public final class PropertyKey implements Comparable<PropertyKey> {
         "alluxio.table.udb.hive.clientpool.MAX";
     public static final String TABLE_LOAD_DEFAULT_REPLICATION =
         "alluxio.table.load.default.replication";
+
+    public static final String REMOTE_READ_FROM_UFS_ONLY =
+            "alluxio.user.remoteufsonly";
 
     private Name() {} // prevent instantiation
   }

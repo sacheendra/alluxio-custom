@@ -27,6 +27,7 @@ import alluxio.client.file.URIStatus;
 import alluxio.client.file.options.InStreamOptions;
 import alluxio.client.file.options.OutStreamOptions;
 import alluxio.collections.Pair;
+import alluxio.conf.PropertyKey;
 import alluxio.exception.ExceptionMessage;
 import alluxio.exception.PreconditionMessage;
 import alluxio.exception.status.UnavailableException;
@@ -223,7 +224,8 @@ public final class BlockStoreClient {
       }
     }
 
-    if (false && dataSourceType != BlockInStreamSource.NODE_LOCAL) {
+    boolean remoteReadUfsOnly = mContext.getClusterConf().getBoolean(PropertyKey.REMOTE_READ_FROM_UFS_ONLY);
+    if (remoteReadUfsOnly && dataSourceType != BlockInStreamSource.NODE_LOCAL) {
       dataSource = null;
       dataSourceType = null;
     }
